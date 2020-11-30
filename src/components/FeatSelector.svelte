@@ -1,123 +1,13 @@
 <script>
     import { selected_genes, gene_data} from "../stores";
 
-    const settings = {
-        sortable: true,
-        pagination: true,
-        rowPerPage: 5,
-        columnFilter: false,
-        css: true,
-    };
+    /*
 
-    // let data = [
-    //     {
-    //         gene: "ABBA1",
-    //         score: 0.999,
-    //     },
-    //     {
-    //         gene: "QWWWL2",
-    //         score: 0.9,
-    //     },
-    //     {
-    //         gene: "HI883",
-    //         score: 0.729,
-    //     },
-    //     {
-    //         gene: "QWWWL4",
-    //         score: 0.9,
-    //     },
-    //     {
-    //         gene: "HI885",
-    //         score: 0.729,
-    //     },
-    //     {
-    //         gene: "QWWWL6",
-    //         score: 0.9,
-    //     },
-    //     {
-    //         gene: "HI887",
-    //         score: 0.729,
-    //     },
-    //     {
-    //         gene: "QWWW8L",
-    //         score: 0.9,
-    //     },
-    //     {
-    //         gene: "HI898",
-    //         score: 0.729,
-    //     },
-    //     {
-    //         gene: "HI1088",
-    //         score: 0.729,
-    //     },
-    //     {
-    //         gene: "QWW11WL",
-    //         score: 0.9,
-    //     },
-    //     {
-    //         gene: "HI1288",
-    //         score: 0.729,
-    //     },
-    //     {
-    //         gene: "QWW13WL",
-    //         score: 0.9,
-    //     },
-    //     {
-    //         gene: "HI1488",
-    //         score: 0.729,
-    //     },
-    //     {
-    //         gene: "QWW11WL",
-    //         score: 0.9,
-    //     },
-    //     {
-    //         gene: "HI1288",
-    //         score: 0.729,
-    //     },
-    //     {
-    //         gene: "QWW13WL",
-    //         score: 0.9,
-    //     },
-    //     {
-    //         gene: "HI1488",
-    //         score: 0.729,
-    //     },
-    //     {
-    //         gene: "QWW11WL",
-    //         score: 0.9,
-    //     },
-    //     {
-    //         gene: "HI1288",
-    //         score: 0.729,
-    //     },
-    //     {
-    //         gene: "QWW13WL",
-    //         score: 0.9,
-    //     },
-    //     {
-    //         gene: "HI1488",
-    //         score: 0.729,
-    //     },
-    //     {
-    //         gene: "QWW11WL",
-    //         score: 0.9,
-    //     },
-    //     {
-    //         gene: "HI1288",
-    //         score: 0.729,
-    //     },
-    //     {
-    //         gene: "QWW13WL",
-    //         score: 0.9,
-    //     },
-    //     {
-    //         gene: "HI1488",
-    //         score: 0.729,
-    //     },
-    // ];
+    TODO here
+        - Add clear selection
+        - Add range selection so can choose genes 0-100 or 100-500
 
-    // let selected_genes = [];
-
+    */
     
 </script>
 

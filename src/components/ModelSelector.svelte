@@ -1,7 +1,6 @@
 <script>
     
     import Select from 'svelte-select';
-
     import {selected_model} from "../stores.js"
 
 
@@ -12,7 +11,6 @@
         {value:"RF", label:"Random Forest"}
     ]
 
-    // let s_model = {value:"LR", label: "Linear Regression (LASSO)"};
 
 </script>
 
@@ -28,11 +26,6 @@
 <div id="model-selector">
     <h1>Select Model Type:</h1>
 
-
     <Select items={model_options} bind:selectedValue={$selected_model} ></Select>
-
-    <p>You said:</p>
-    <p>{$selected_model.value} </p>
-
 
 </div>

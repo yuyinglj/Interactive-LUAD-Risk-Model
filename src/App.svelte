@@ -2,6 +2,11 @@
 	import FeatSelector from "./components/FeatSelector.svelte";
 	import ModelSelector from "./components/ModelSelector.svelte";
 	import TrainPanel from "./components/TrainPanel.svelte";
+	import {gene_data} from "./stores";
+
+	// load data
+	import * as gene_data_json from "../data/gene_data.json";
+	$gene_data = gene_data_json.values;
 </script>
 
 <style>

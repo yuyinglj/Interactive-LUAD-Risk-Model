@@ -1,5 +1,5 @@
 <script>
-    import {selected_model} from "../stores.js"
+    import {selected_model, selected_genes} from "../stores.js"
 
 
 </script>
@@ -16,8 +16,6 @@
 <div id="feat-selector">
     <h1>Train Model:</h1>
     <p>Model type: {$selected_model.label}</p>
-    <p> Features: </p>
-
-
+    <p>Features: {$selected_genes}</p>
 
 </div>

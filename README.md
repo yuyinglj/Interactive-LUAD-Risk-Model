@@ -1,64 +1,40 @@
-# Important Stuff
+# Interactive LUAD Risk Modeling
 
-### Install
+This is a web app for creating risk models for Lung Adenocarcinoma patients based off of their genetic data. Data is taken from TCGA and filtered down using GSEA. It's a [Svelte](https://svelte.dev/docs) web app that talks to a python backend to run the modeling. 
+
+## How to run
+
+To install and run the web app you need to run the following commands. At the root level of the repo.
 
 ```bash
 npm install
+npm run dev
 ```
 
-### Run 
+Or the below optimizes the build for deploying (not really necessary)
 
 ```bash
 npm run dev
 ```
 
-### Building and running in production mode
+Run python server
 
-To create an optimised version of the app:
+TODO
 
-```bash
-npm run build
+### Code layout
+
+Svelte app is in the `src` directory, the python server in `python-server` directory, and data stored in `data` directory.
+
+The Svelte app looks like this at a high level
+
+```
+src
+|   /components     # this containts different app components
+|   App.svelte      # main app code
+|   stores.js       # app wide state variables  
+
 ```
 
-You can run the newly built app with `npm run start`. This uses [sirv](https://github.com/lukeed/sirv), which is included in your package.json's `dependencies` so that the app will work when you deploy to platforms like [Heroku](https://heroku.com).
+### Dev notes
 
-# Other stuff
-
-### Single-page app mode
-
-By default, sirv will only respond to requests that match files in `public`. This is to maximise compatibility with static fileservers, allowing you to deploy your app anywhere.
-
-If you're building a single-page app (SPA) with multiple routes, sirv needs to be able to respond to requests for *any* path. You can make it so by editing the `"start"` command in package.json:
-
-```js
-"start": "sirv public --single"
-```
-
-### Using TypeScript
-
-This template comes with a script to set up a TypeScript development environment, you can run it immediately after cloning the template with:
-
-```bash
-node scripts/setupTypeScript.js
-```
-
-Or remove the script via:
-
-```bash
-rm scripts/setupTypeScript.js
-```
-
-### Deploying to the web
-
-Install [Vercel](https://vercel.com) if you haven't already:
-
-```bash
-npm install -g vercel
-```
-
-Then, from within your project folder:
-
-```bash
-cd public
-vercel deploy --name my-project
-```
+If you're making change to app and get a weird Rollup error like this `[!] Error: Unexpected token (Note that you need @rollup/plugin-json to import JSON files)` you probably need to install a new npm package AND add it to the `rollup.config.js` file under plugins.

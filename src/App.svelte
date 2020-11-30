@@ -9,6 +9,7 @@
 		/* text-align: center; */
 		margin: 0 auto;
 		border: 1px solid grey;
+	
 	}
 
 	.header {
@@ -24,24 +25,44 @@
 		margin: 0rem;
 	}
 
-	.left-half {
-		float: left;
-		width: 40%;
+	.grid-box {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		/* grid-template-rows: 1fr 1fr; */
+		height: 100%;
+		grid-auto-rows: minmax(5rem, auto);
 	}
 
-	.right-half {
-		width: 60%;
-		float: left;
+	.left-top {
+		grid-column-start: 1;
+		grid-column-end: 2;
+		grid-row-start: 1;
+		/* grid-row-end: 2; */
 	}
 
-	@media (max-width: 1200px) {
+	.left-bottom {
+		grid-column-start: 1;
+		grid-column-end: 2;
+		grid-row-start: 2;
+		/* grid-row-end: 3; */
+	}
+
+	.right{
+		grid-column-start: 2;
+		grid-column-end: 4;
+		grid-row-start: 1;
+		/* grid-row-end: 3; */
+	}
+
+
+	/* @media (max-width: 1200px) {
 		.left-half {
 			width: 100%;
 		}
 		.right-half {
 			width: 100%;
 		}
-	}
+	} */
 </style>
 
 <div class="header gradient">
@@ -49,11 +70,15 @@
 </div>
 
 <main>
-	<div class="left-half">
-		<ModelSelector />
-		<FeatSelector />
-	</div>
-	<div class="right-half">
-		<TrainPanel />
+	<div class="grid-box">
+		<div class="left-top">
+			<ModelSelector />
+		</div>
+		<div class="left-bottom">
+			<FeatSelector />
+		</div>
+		<div class="right">
+			<TrainPanel />
+		</div>
 	</div>
 </main>

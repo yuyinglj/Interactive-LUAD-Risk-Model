@@ -7,7 +7,7 @@ html, body {
 body {
 	color: #333;
 	margin: 0;
-	padding: 8px;
+	padding: 0px;
 	box-sizing: border-box;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
@@ -61,3 +61,27 @@ button:not(:disabled):active {
 button:focus {
 	border-color: #666;
 }
+
+/* Added styles */
+.gradient {
+	background: linear-gradient(280deg, #067, #085, #247, #a60, #b00);
+	background-size: 800% 800%;
+	animation: move 30s ease infinite;
+}
+
+@-webkit-keyframes move {
+	0% {background-position: 0% 50%; }
+	50% {background-position: 100% 50%;}
+	100% {background-position: 0% 50%;}
+}
+@-moz-keyframes move {
+	0% {background-position: 0% 50%;}
+	50% {background-position: 100% 50%;}
+	100% {background-position: 0% 50%;}
+}
+@keyframes move {
+	0% {background-position: 0% 50%;}
+	50% {background-position: 100% 50%;}
+	100% {background-position: 0% 50%;}
+}
+

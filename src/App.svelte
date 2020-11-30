@@ -1,30 +1,59 @@
 <script>
-	export let name;
+	import FeatSelector from "./components/FeatSelector.svelte";
+	import ModelSelector from "./components/ModelSelector.svelte";
+	import TrainPanel from "./components/TrainPanel.svelte";
 </script>
-
-<main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-</main>
 
 <style>
 	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
+		/* text-align: center; */
 		margin: 0 auto;
+		border: 1px solid grey;
 	}
 
-	h1 {
-		color: #ff3e00;
+	.header {
+		min-height: 4rem;
+	}
+
+	.header h1 {
 		text-transform: uppercase;
-		font-size: 4em;
+		font-size: 2rem;
+		color: white;
 		font-weight: 100;
+		padding: 1rem;
+		margin: 0rem;
 	}
 
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
+	.left-half {
+		float: left;
+		width: 40%;
+	}
+
+	.right-half {
+		width: 60%;
+		float: left;
+	}
+
+	@media (max-width: 1200px) {
+		.left-half {
+			width: 100%;
+		}
+		.right-half {
+			width: 100%;
 		}
 	}
 </style>
+
+<div class="header gradient">
+	<h1>LUAD Risk Model Builder</h1>
+</div>
+
+<main>
+	<div class="left-half">
+		<ModelSelector />
+		<FeatSelector />
+	</div>
+	<div class="right-half">
+		<TrainPanel />
+	</div>
+</main>

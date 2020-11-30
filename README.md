@@ -17,24 +17,31 @@ Or the below optimizes the build for deploying (not really necessary)
 npm run dev
 ```
 
-Run python server
+Install server libraries
 
-TODO
+```bash
+pip install fastapi unicorn
+```
 
-### Code layout
+Run server
+```bash
+cd python-server
+uvicorn main:app --reload
+```
+## Code layout
 
 Svelte app is in the `src` directory, the python server in `python-server` directory, and data stored in `data` directory.
 
 The Svelte app looks like this at a high level
 
 ```
-src
-|   /components     # this containts different app components
-|   App.svelte      # main app code
-|   stores.js       # app wide state variables  
+/src
+   /components     # this containts different app components
+   App.svelte      # main app code
+   stores.js       # app wide state variables  
 
 ```
 
-### Dev notes
+## Dev notes
 
-If you're making change to app and get a weird Rollup error like this `[!] Error: Unexpected token (Note that you need @rollup/plugin-json to import JSON files)` you probably need to install a new npm package AND add it to the `rollup.config.js` file under plugins.
+- If you're making change to app and get a weird Rollup error like this `[!] Error: Unexpected token (Note that you need @rollup/plugin-json to import JSON files)` you probably need to install a new npm package AND add it to the `rollup.config.js` file under plugins.

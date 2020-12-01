@@ -37,17 +37,28 @@ input, button, select, textarea {
 	margin: 0 0 0.5em 0;
 	box-sizing: border-box;
 	border: 1px solid #ccc;
-	border-radius: 2px;
+	border-radius: 6px;
 }
 
 input:disabled {
 	color: #ccc;
 }
 
+/* ADDED STYLES */
+
 button {
-	color: #333;
-	background-color: #f4f4f4;
-	outline: none;
+	background-color:#f9f9f9;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	cursor:pointer;
+	color:#666666;
+	padding:6px 24px;
+	text-decoration:none;
+}
+
+button:hover {
+	background-color:#e9e9e9;
 }
 
 button:disabled {
@@ -58,13 +69,14 @@ button:not(:disabled):active {
 	background-color: #ddd;
 }
 
-button:focus {
-	border-color: #666;
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 100;
 }
 
-/* Added styles */
+
+/* BANNER GRADIENT */
 .gradient {
-	background: linear-gradient(280deg, #067, #085, #247, #a60, #b00);
+	background: linear-gradient(280deg, #b00, #074861, #085, #247, #a60);
 	background-size: 800% 800%;
 	animation: move 30s ease infinite;
 }

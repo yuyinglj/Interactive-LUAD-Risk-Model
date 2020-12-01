@@ -37,7 +37,7 @@
 
 <style>
     #feat-selector {
-        border: 1px solid rgb(87, 130, 209);
+        /* border: 1px solid rgb(87, 130, 209); */
         padding: 1rem;
     }
 </style>

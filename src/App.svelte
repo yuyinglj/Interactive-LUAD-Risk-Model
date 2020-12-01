@@ -13,17 +13,20 @@
 	main {
 		/* text-align: center; */
 		margin: 0 auto;
-		border: 1px solid grey;
-	
+		/* border: 1px solid red; */ /* for debugging spacing */
+		
 	}
 
 	.header {
-		min-height: 4rem;
+		min-height: 6rem;
+		display: flex;
+		/* width: 100%; */
+		align-items: center;
 	}
 
 	.header h1 {
 		text-transform: uppercase;
-		font-size: 2rem;
+		font-size: 2.5rem;
 		color: white;
 		font-weight: 100;
 		padding: 1rem;

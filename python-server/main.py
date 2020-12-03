@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from model import create_model
+from model import run_model_creation
 
 ### App init
 app = FastAPI()
@@ -24,6 +24,6 @@ class SentItem(BaseModel):
 ## App routes
 @app.post("/model")
 def model_endpt(req_item: SentItem):
-    res = create_model(req_item.model_type, req_item.genes)
+    res = run_model_creation(req_item.model_type, req_item.genes) # TODO update this
 
     return res

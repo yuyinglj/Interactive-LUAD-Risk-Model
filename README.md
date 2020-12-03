@@ -28,6 +28,16 @@ Run web app (from repo root)
 npm run dev
 ```
 
+## Data
+
+Not all data is not in git because some of it is too big. All of the data is downloadable at [this link](https://drive.google.com/drive/folders/1QFeCGAeGQZr-mFbi77dTB5pNmRMO8eGm?usp=sharing)
+
+
+`gene_data.json` should be in data folder already (but if not is at url above)
+`risk_expression_data.txt`
+`filtered_all_data_merged.csv`
+
+
 ## Code layout
 
 Svelte app is in the `src` directory, the python server in `python-server` directory, and data stored in `data` directory.

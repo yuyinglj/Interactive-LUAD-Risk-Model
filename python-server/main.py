@@ -2,10 +2,11 @@ from typing import Optional, List
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
+import pandas as pd
 from model import run_model_creation
 
-### App init
+
+# App init
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -15,15 +16,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-### Data types
+
+data_df = pd.read_csv("../data/model_input_data.csv")
+print("Data loaded.")
+
+# Data types
 class SentItem(BaseModel):
-    model_type: str
-    genes: List[str]  # how to turn this into array?
+    classifier_name: str
+    prediction_type: str
+    genelist: List[str] 
+    day_thresh: int
 
 
-## App routes
+# App routes
 @app.post("/model")
-def model_endpt(req_item: SentItem):
-    res = run_model_creation(req_item.model_type, req_item.genes) # TODO update this
+def model_endpt(request_param: SentItem):
+    res = run_model_creation(data_df,
+                             request_param.classifier_name,
+                             request_param.prediction_type,
+                             request_param.genelist,
+                             request_param.day_thresh) 
 
     return res

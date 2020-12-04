@@ -1,5 +1,5 @@
 <script>
-    import { selected_model, selected_genes } from "../stores.js";
+    import { selected_model, selected_genes, prediction_type } from "../stores.js";
 
     // base URL of server
     const url_base = "http://127.0.0.1:8000"
@@ -27,11 +27,25 @@
 	let promise = Promise.resolve([]); // trick the dum dum computer
 
     function handleClick() {
-        let request_data = {
-            "model_type": $selected_model.value,
-            "genes": $selected_genes
+        // Validate data a little
+
+        if (!$selected_genes.length) {
+            console.log("Error!")
+
+            promise = Promise.resolve("Uh oh! Please select at least 1 gene to train a model."); // trick the dum dum computer
+
+        } else { // is valid
+
+            let request_data = {
+            "classifier_name": $selected_model.value,
+            "genelist": $selected_genes,
+            "prediction_type": $prediction_type.value,
+            "day_thresh": $prediction_type.day_thresh
+            }
+
+            promise = postAPI(request_data);
+
         }
-        promise = postAPI(request_data);
     }
 </script>
 
@@ -45,7 +59,9 @@
 <div id="feat-selector">
     <h1>Train Model:</h1>
     <p>Model type: {$selected_model.label}</p>
-    <p>Features: {$selected_genes}</p>
+    <p>Num Features: {$selected_genes.length}</p>
+
+    <p>Pred type: {JSON.stringify($prediction_type)}</p>
 
     <button on:click={handleClick}> hit API</button>
 

@@ -1,148 +1,88 @@
-
-
-"""
-Args
-    model_type: one of [LR, NN, DT, RF]
-    genes: a list of genes to be used as features
-
-
-     f(genes) = ___ 
-
-     outputs
-        - tumor or healthy cell
-        - risk (live or die at some timeframe)
-
-
-    sent to UI
-        - prediction per patient
-        - metrics
-        - Ranked feature importance
-
-"""
-
-
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from sklearn.model_selection import cross_val_score
-import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.datasets import make_moons, make_circles, make_classification
-from sklearn.neural_network import MLPClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.gaussian_process.kernels import RBF
-from sklearn.tree import DecisionTreeClassifier
+
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import cross_validate
-from sklearn.model_selection import StratifiedKFold
-from sklearn.feature_selection import RFECV
-from itertools import compress
+from sklearn.neural_network import MLPClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.model_selection import GridSearchCV
 
+import json
 
-def prepare_data(genelist, prediction_type, df1, df2):
-    # choose the targeted cols(genes)
-    new_df = df1[genelist]
-    if prediction_type == 'cancer_vs_normal':
-        X = new_df
-        # extract the labels and expreession data for all patient
-        normaltissue_index = new_df[df1['Sample Type'] == 'Solid Tissue Normal'].index.to_numpy()
-        # normaltissue_index = normaltissue_index[:100]
-        cancertissue_index = new_df[df1['Sample Type'] != 'Solid Tissue Normal'].index.to_numpy()
-        # new_X_index = np.append(normaltissue_index,cancertissue_index,axis =0)
-        # X = new_df.iloc[new_X_index]
-        y = np.zeros((1, len(X)))[0]
-        y[normaltissue_index] = 0
-        y[cancertissue_index] = 1
+# gridsearchCV throws lots of warnings so supress bc not critical
+import warnings
 
-        print("There are", len(X), "samples in total.", len(y[normaltissue_index]),
-              "normal samples vs", len(y[cancertissue_index]), "cancer samples.", "\n")
-    if prediction_type == 'highrisk_vs_lowrisk':
-        X = df2[genelist]
-        y = np.zeros((1, len(X)))[0]
-        # in the file 'risk_expression_data.txt', the first 73 patients are high risk and the other 73 patients are low risk.
-        y[:73] = 1
-        y[73:] = 0
-        print("There are", len(X), "samples in total."
-              "73 low risk samples vs", "73 high risk samples.", "\n")
+def warn(*args, **kwargs):
+    pass
+warnings.warn = warn
+
+'''
+data_df has [bcr_patient_barcode, death_days_to, y_is_tumor, GENES...]
+
+NOTE: death_days_to = 1_000_000 means they are censored and didnt die in data
+
+'''
+def prepare_data(data_df, genelist, prediction_type, day_threshold=600):
+    X = data_df[genelist]
+
+    if prediction_type == 'normal_vs_tumor': # 0 = normal, 1 = tumor
+        y = data_df["y_is_tumor"] 
+
+    if prediction_type == 'lowrisk_vs_highrisk': # 0 is low risk, 1 = high risk
+        y = (data_df["death_days_to"] < day_threshold).astype(int)
+        
     return X, y
 
-'''
-{value:"LR", label: "Linear Regression (LASSO)"},
-        {value:"NN", label:"Neural Network"},
-        {value: "DT", label:"Decision Tree"},
-        {value:"RF", label:"Random Forest"}
 
-'''
-def train_model(X, y, classifier_name, genelist):
-    if classifier_name == 'Random_Forest':
+def train_model(X, y, classifier_name, scoring=["f1_weighted", "balanced_accuracy"]):
+    X = (X - X.mean()) / X.std()
+        
+    if classifier_name == 'RF':
         clf = RandomForestClassifier()
-    if classifier_name == 'Neural_Network':
+    if classifier_name == 'NN':
         clf = MLPClassifier()
-    if classifier_name == 'K_nearest_neighbor':
-        clf = KNeighborsClassifier(3)
-    if classifier_name == 'Naive_Bayes':
-        clf = GaussianNB()
-    if classifier_name == 'Logistic_Regression':
+    if classifier_name == 'DT':
+        clf = DecisionTreeClassifier()
+    if classifier_name == 'LR':
         clf = LogisticRegression()
-    if classifier_name == 'SVM':
+    if classifier_name == "SVM":
         clf = SVC()
-    results = cross_validate(clf, X, y, cv=3, scoring=['balanced_accuracy', 'average_precision', 'f1_weighted', 'roc_auc'])
-
-    s1 = np.mean(results['test_balanced_accuracy'])
-    s2 = np.mean(results['test_average_precision'])
-    s3 = np.mean(results['test_f1_weighted'])
-    s4 = np.mean(results['test_roc_auc'])
-
-    # TODO train a whole model here as well on all data and get output labels
+        
+    params = {
+        "RF": {"n_estimators": [10, 100], "criterion": ["gini", "entropy"]},
+        "NN": {"hidden_layer_sizes": [(100), (50, 25), (100, 50)], "learning_rate_init": [.01, .001], "max_iter": [100]},
+        "DT": {"max_depth": [None, 10]},
+        "LR": {"penalty": ["l1", "l2", "elasticnet"], "solver": ["lbfgs", "saga"], "l1_ratio":[.5], "max_iter":[200]},
+        "SVM": {"kernel": ["linear", "poly", "rbf",]}
+    }
     
-
-    # metrics = results['test_score']
-    print('The classifier is:', classifier_name, "\n", "The genes you chose are:", "\n", genelist, "\n", "\n",
-          "The metrics of the classifer with those specific genes are:", "\n", "\n",
-          "balanced_accuracy:", s1, "\n",
-          'average_precision:', s2, "\n",
-          'f1_weighted:', s3, "\n",
-          'roc_auc:', s4)
-    return s1, s2, s3, s4
+    # evaluates with both scoring metrics but selects the best_model with the first
+    cv = GridSearchCV(clf, params[classifier_name], scoring=scoring, refit=scoring[0], cv=5)
+    cv.fit(X, y)
+    
+    # best estimator
+    best_clf = cv.best_estimator_
+    
+    # get average metrics
+    metric_df = pd.DataFrame(cv.cv_results_)
+    metrics = {}
+    
+    for m in scoring:
+        _val = metric_df[metric_df[f"rank_test_{scoring[0]}"] == 1][f"mean_test_{m}"].values[0]
+        metrics[m] = _val
+        
+    return best_clf, metrics
 
 
 '''
 TODO change this to Get feature importance for any model
 
-
 '''
 def get_feature_importance(final_genelist, model_name, X, y):
+    ...
 
-    if len(final_genelist) > 10:
-        print("There are more than 10 features to evaluate, it might take several minutes!")
-    if classifier_name == 'Random_Forest':
-        clf = RandomForestClassifier()
-    if classifier_name == 'Logistic_Regression':
-        clf = LogisticRegression()
-    if classifier_name == 'SVM':
-        clf = SVC(kernel='sigmoid')
-
-    rfecv = RFECV(estimator=clf, step=1, cv=3, scoring='balanced_accuracy')
-    rfecv.fit(X, y)
-
-    print("Optimal number of features : %d" % rfecv.n_features_)
-    selected_genes = list(compress(final_genelist, rfecv.support_))
-    print("The supported genes are:", selected_genes)
-
-    # Plot number of features VS. cross-validation scores
-    plt.figure()
-    plt.xlabel("Number of features selected")
-    plt.ylabel("Cross validation score (nb of correct classifications)")
-    plt.plot(range(1, len(rfecv.grid_scores_) + 1), rfecv.grid_scores_)
-    plt.show()
-    return selected_genes
 
 
 '''
@@ -168,30 +108,24 @@ prediction_type: 'cancer_vs_normal' or 'highrisk_vs_lowrisk'
 genelist: list of gene names, e.g. ['AAAS','ERAS','MPO','BTBD2','MYG1']
 
 '''
-def run_model_creation(classifier_name, prediction_type, genelist):
+def run_model_creation(data_df, classifier_name, prediction_type, genelist, day_thresh):
     print("In create model.")
     print("\tModel Type: ", classifier_name)
     print("\tOutput variable: ", prediction_type)
     print("\tGenes: ", genelist)
+    print("\tData looks like: ", data_df.shape)
 
-    # TODO move this to the server
-    print('###Loading data, it might take 2 minutes!###', "\n")
-    df1 = pd.read_csv('filtered_all_data_merged.csv', dtype=object) # in drive
-    df2 = pd.read_csv('risk_expression_data.txt', sep='\t') # in drive 
-    df2 = df2.iloc[:, 1:].T
-    df2 = df2.drop(['DESCRIPTION'])
-    new_columns = df2.loc['NAME']
-    df2 = pd.DataFrame(data=df2.iloc[1:, 0:].to_numpy(), columns=new_columns)
-    print("###Finish loading data, start data preprocessing!###", "\n")
+    X, y = prepare_data(data_df, genelist, prediction_type, day_threshold=day_thresh)
 
-    # preprocessing the data
-    X, y = prepare_data(genelist, prediction_type, df1, df2)
-    print("###Finish data preprocessing, start classification!###", "\n")
+    # scoring = ["f1_weighted", "balanced_accuracy"]
+    best_clf, metrics_dict = train_model(X, y, classifier_name) #, scoring) 
 
-    s1, s2, s3, s4 = train_model(X, y, classifier_name, genelist) # TODO get model and metrics here
+    predictions = best_clf.predict(X)
 
-    # Second Round Feature Selection
-    get_feature_importance(clf, X, y, ...)
+    # feat_importance = get_feature_importance(clf, X, y, ...)
 
-    return {"metrics": {"ACC": .70, "F1": .57},  "genes": genelist}
+    response = {"metrics": metrics_dict,  "predictions": predictions.tolist()}
+    json_res = json.dumps(response)
+    print(json_res)
+    return json_res
 

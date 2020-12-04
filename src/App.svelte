@@ -5,8 +5,8 @@
 	import {gene_data} from "./stores";
 
 	// load data
-	import * as gene_data_json from "../data/gene_data.json";
-	$gene_data = gene_data_json.values;
+	import * as gene_ranking_tvh from "../data/gene_ranking_tvh.json";
+	$gene_data = gene_ranking_tvh.values;
 </script>
 
 <style>

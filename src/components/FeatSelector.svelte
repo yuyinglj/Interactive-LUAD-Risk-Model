@@ -32,7 +32,7 @@
     }
 
     .numInput {
-        width: 65px;
+        width: 75px;
     }
 
     .blockDiv {

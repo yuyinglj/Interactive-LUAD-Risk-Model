@@ -60,6 +60,7 @@
     <h1>Train Model:</h1>
     <p>Model type: {$selected_model.label}</p>
     <p>Num Features: {$selected_genes.length}</p>
+    <p>Features: {$selected_genes}</p>
 
     <p>Pred type: {JSON.stringify($prediction_type)}</p>
 

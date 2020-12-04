@@ -2,11 +2,14 @@
 	import FeatSelector from "./components/FeatSelector.svelte";
 	import ModelSelector from "./components/ModelSelector.svelte";
 	import TrainPanel from "./components/TrainPanel.svelte";
-	import {gene_data} from "./stores";
+	import {gene_data_tvh, gene_data_risk} from "./stores";
 
 	// load data
 	import * as gene_ranking_tvh from "../data/gene_ranking_tvh.json";
-	$gene_data = gene_ranking_tvh.values;
+	import * as gene_ranking_risk from "../data/gene_ranking_risk.json";
+	
+	$gene_data_tvh = gene_ranking_tvh.values;
+	$gene_data_risk = gene_ranking_risk.values;
 </script>
 
 <style>

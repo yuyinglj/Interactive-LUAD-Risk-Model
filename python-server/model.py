@@ -35,7 +35,10 @@ def prepare_data(data_df, genelist, prediction_type, day_threshold=600):
         
     return X, y
 
+'''
+TODO: add class_weight to hyperparameter search 
 
+'''
 def train_model(X, y, classifier_name, scoring=["f1_weighted", "balanced_accuracy"]):
     X = (X - X.mean()) / X.std()
         

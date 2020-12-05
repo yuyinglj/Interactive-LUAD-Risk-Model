@@ -102,8 +102,52 @@ use these to creat Kaplan meier curve with below data
 
 '''
 def get_survival_curve():
-    ...
+    # load the data
+    df = pd.read_csv('model_input_data.csv')
+    # split the data according to model_output
+    df= df.iloc[:,:3]
+    df['model_output'] = model_output
+    group_0 = df[df['model_output']==0]
+    group_1 = df[df['model_output']==1]
+    # build event table
+    event_table_0 = build_event_table(group_0)
+    event_table_1 = build_event_table(group_1)
+    # plot the curve
+    x = np.arange(0,4962)
+    plt.plot(x,event_table0['p'])
+    plt.plot(x,event_table1['p'])
+    plt.title('The Kaplan-Meier Estimate')
+    plt.show()
 
+# function to build_event_table, which will be used by get_survival_curve()
+def build_event_table(group_data):
+    #the max day is 4961
+    event_table = pd.DataFrame(data=np.zeros((4962,2)), columns=['event','at_risk'])
+    event_table.index.name = 'days'
+    start_at_risk = len(group_data)
+    
+    for i in range(len(event_table)):
+        if i ==0:
+            event_table.iloc[i][1]=start_at_risk
+        else:
+            event_table.iloc[i][1]= event_table.iloc[i-1][1]-event_table.iloc[i-1][0]
+            event_num = len(group_data[group_data['death_days_to']==i])
+            event_table.iloc[i][0]=event_num
+    event_table['difference'] = event_table['at_risk']-event_table['event']
+    all_st = []
+    all_p = []
+    
+    for j in range(len(event_table)):
+        st = event_table.iloc[j,2]/event_table.iloc[j,1]
+        all_st.append(st)
+        if j==0:
+            p = 1
+        else:
+            p = p*st
+            all_p.append(p)
+    event_table['st']=all_st
+    event_table['p']=all_p
+    return event_table
 
 '''
 classifier_name: 'Random_Forest', 'Logistic_Regression' and 'SVM'
